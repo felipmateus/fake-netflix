@@ -23,7 +23,6 @@ export class Category{
     is_active: boolean;
     created_at: Date;
 
-
     constructor(props: CategoryConstructorProps){
         this.category_id = props.category_id ?? new Uuid;
         this.name = props.name;
@@ -33,15 +32,19 @@ export class Category{
     }
 
     static create(props: CategoryConstructorProps): Category {
-        return new Category(props);
+        const category = new Category(props);
+        Category.validate(category);
+        return category;
     }
 
     changeName(name: string): void {
         this.name = name;
+        Category.validate(this);
     }
 
     changeDescription(description: string): void {
         this.description = description;
+        Category.validate(this);
     }
 
     activate(): void {
@@ -55,7 +58,7 @@ export class Category{
     static validate(entity: Category) {
         const validator = CategoryValidatorFactory.create();
         return validator.validate(entity);
-      }    
+    }    
 
     toJSON() {
         return {
